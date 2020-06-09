@@ -3,6 +3,8 @@ package itc.walmart.pocmysql.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Table(name = "department")
@@ -12,6 +14,7 @@ public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+    @NotBlank(message = "Name can not be null or empty")
     String name;
 
     public Department() {

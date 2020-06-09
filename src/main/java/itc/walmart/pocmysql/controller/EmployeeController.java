@@ -5,20 +5,24 @@ import itc.walmart.pocmysql.service.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/v1")
+@Validated
 public class EmployeeController {
 
     @Autowired
     EmployeeServiceImpl employeeServiceImpl;
 
     @PostMapping("employee")
-    public Employee createEmployee(@RequestBody Employee employee){
+    public Employee createEmployee(@RequestBody @Valid Employee employee){
         Employee createdEmployee = employeeServiceImpl.createEmployee(employee);
         return createdEmployee;
     }
@@ -29,7 +33,7 @@ public class EmployeeController {
     }
 
     @GetMapping("employee/{employeeId}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long employeeId){
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable @Min(1) Long employeeId){
         Employee employee;
         try{
             employee = employeeServiceImpl.getEmployeeById(employeeId);
@@ -40,13 +44,13 @@ public class EmployeeController {
     }
 
     @PatchMapping("employee")
-    public Employee updateEmployee(@RequestBody Employee employee){
+    public Employee updateEmployee(@RequestBody @Valid Employee employee){
         Employee updatedEmployee = employeeServiceImpl.updateEmployee(employee);
         return updatedEmployee;
     }
 
     @DeleteMapping("employee/{employeeId}")
-    public ResponseEntity deleteEmployeeById(@PathVariable Long employeeId){
+    public ResponseEntity deleteEmployeeById(@PathVariable @Min(1) Long employeeId){
         try{
             employeeServiceImpl.deleteEmployee(employeeId);
             ResponseEntity.ok(200);

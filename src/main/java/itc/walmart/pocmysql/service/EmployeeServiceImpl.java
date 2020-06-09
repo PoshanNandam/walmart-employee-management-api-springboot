@@ -1,9 +1,7 @@
 package itc.walmart.pocmysql.service;
 
-import itc.walmart.pocmysql.model.Address;
 import itc.walmart.pocmysql.model.Department;
 import itc.walmart.pocmysql.model.Employee;
-import itc.walmart.pocmysql.repository.AddressRepo;
 import itc.walmart.pocmysql.repository.DepartmentRepo;
 import itc.walmart.pocmysql.repository.EmployeeRepo;
 import org.jetbrains.annotations.NotNull;
@@ -11,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
