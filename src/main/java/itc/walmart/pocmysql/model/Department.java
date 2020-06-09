@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class Department {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     Long id;
     @NotBlank(message = "Name can not be null or empty")
     String name;

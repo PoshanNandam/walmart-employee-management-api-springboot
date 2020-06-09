@@ -2,7 +2,10 @@ package itc.walmart.pocmysql.controller;
 
 import itc.walmart.pocmysql.model.Employee;
 import itc.walmart.pocmysql.service.EmployeeServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -17,14 +21,23 @@ import java.util.NoSuchElementException;
 @RequestMapping("api/v1")
 @Validated
 public class EmployeeController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     EmployeeServiceImpl employeeServiceImpl;
 
     @PostMapping("employee")
-    public Employee createEmployee(@RequestBody @Valid Employee employee){
-        Employee createdEmployee = employeeServiceImpl.createEmployee(employee);
-        return createdEmployee;
+    public ResponseEntity createEmployee(@RequestBody @Valid Employee employee){
+        logger.info("Received in the employee controller create method: "+ employee+ " at: "+ LocalDateTime.now());
+        try {
+            return ResponseEntity.ok(employeeServiceImpl.createEmployee(employee));
+        } catch (DuplicateKeyException e){
+            logger.error("Exception while creating the employee: "+ employee.getFirstName() + " at:  " + LocalDateTime.now() + " " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (NoSuchElementException e) {
+            logger.error("Exception while creating the employee: " + employee + " at: " + LocalDateTime.now() + " " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @GetMapping("employee")

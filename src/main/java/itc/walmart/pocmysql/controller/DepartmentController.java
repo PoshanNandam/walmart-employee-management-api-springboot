@@ -3,6 +3,8 @@ package itc.walmart.pocmysql.controller;
 import itc.walmart.pocmysql.model.Department;
 import itc.walmart.pocmysql.service.DepartmentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +23,13 @@ public class DepartmentController {
     DepartmentServiceImpl departmentService;
 
     @PostMapping("department")
-    public ResponseEntity<Department> createDepartment(@RequestBody @Valid Department department){
+    public ResponseEntity createDepartment(@RequestBody @Valid Department department){
         try {
-            return ResponseEntity.status(202).body(departmentService.createDepartment(department));
+            return ResponseEntity.status(HttpStatus.CREATED).body(departmentService.createDepartment(department));
         } catch (NoSuchElementException e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (DuplicateKeyException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

@@ -16,15 +16,15 @@ import java.util.Date;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue
     Long id;
     @NotBlank(message = "First name can not be null or empty")
     String firstName;
     String lastName;
     @NotNull(message = "Age can not be null or empty")
-    int age;
+    Integer age;
     @NotNull(message = "Salary can not be null or empty")
-    double salary;
+    Double salary;
     Date joinDate;
     @NotNull(message = "Department can not be null or empty")
     @ManyToOne
