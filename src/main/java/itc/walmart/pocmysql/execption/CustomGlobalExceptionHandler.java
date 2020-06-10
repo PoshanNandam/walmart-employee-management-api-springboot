@@ -1,5 +1,7 @@
 package itc.walmart.pocmysql.execption;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // error handle for @Valid
     @Override
@@ -39,12 +42,13 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 .collect(Collectors.toList());
 
         body.put("errors", errors);
-
+        logger.error("handleMethodArgumentNotValid: "+body);
         return new ResponseEntity<>(body, headers, status);
 
     }
     @ExceptionHandler(ConstraintViolationException.class)
     public void constraintViolationException(HttpServletResponse response) throws IOException {
+        logger.error("constraintViolationException : ");
         response.sendError(HttpStatus.BAD_REQUEST.value());
     }
 

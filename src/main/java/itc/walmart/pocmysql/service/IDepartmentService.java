@@ -10,6 +10,6 @@ public interface IDepartmentService {
     public CompletableFuture<Department> createDepartment(Department department);
     public List<Department> getAllDepartments();
     public Optional<Department> getDepartmentById(Long id);
-    public Department updateDepartment(Department department);
+    public Department   updateDepartment(Department department);
     public void deleteDepartmentById(Long id);
 }

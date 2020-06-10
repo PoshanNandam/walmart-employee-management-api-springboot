@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -57,20 +58,30 @@ public class EmployeeController {
     }
 
     @PatchMapping("employee")
-    public Employee updateEmployee(@RequestBody @Valid Employee employee){
-        Employee updatedEmployee = employeeServiceImpl.updateEmployee(employee);
-        return updatedEmployee;
+    public ResponseEntity updateEmployee(@RequestBody @Valid Employee employee){
+        try{
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeServiceImpl.updateEmployee(employee));
+        } catch (NullPointerException e){
+            logger.error("NullPointerException at patchDepartment of ID: "+ employee.getId());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Department not present to patch");
+        } catch (EmptyResultDataAccessException e){
+            logger.error("EmptyResultDataAccessException at patchEmployee of ID: "+ employee.getId());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("employee/{employeeId}")
     public ResponseEntity deleteEmployeeById(@PathVariable @Min(1) Long employeeId){
         try{
             employeeServiceImpl.deleteEmployee(employeeId);
-            ResponseEntity.ok(200);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IllegalArgumentException e){
-
+            logger.error("IllegalArgumentException at deleteEmployee: "+ employeeId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (EmptyResultDataAccessException e){
+            logger.error("EmptyResultDataAccessException at deleteEmployee: "+ employeeId);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("employees")
