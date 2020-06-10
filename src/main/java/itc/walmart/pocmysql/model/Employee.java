@@ -1,14 +1,12 @@
 package itc.walmart.pocmysql.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -25,7 +23,8 @@ public class Employee {
     Integer age;
     @NotNull(message = "Salary can not be null or empty")
     Double salary;
-    Date joinDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    LocalDate joinDate;
     @NotNull(message = "Department can not be null or empty")
     @ManyToOne
     Department department;
